@@ -88,3 +88,26 @@ export async function loginUser(data: LoginInput): Promise<LoginResponse> {
     token,
   };
 }
+
+// ─── GET CURRENT USER ─────────────────────────────────────────
+export async function getMe(userId: string) {
+  // Cari user di database berdasarkan ID yang ada di JWT payload
+  const user = await prisma.user.findUnique({
+    where: { id: userId },
+    select: {
+      id: true,
+      name: true,
+      email: true,
+      role: true,
+      createdAt: true,
+      // password sengaja TIDAK diambil
+    },
+  });
+
+  // Jika user tidak ditemukan (misalnya akun sudah dihapus tapi token masih aktif)
+  if (!user) {
+    throw new AppError("User not found", 404);
+  }
+
+  return user;
+}
