@@ -21,8 +21,7 @@ export const createTaskSchema = z.object({
   priority: TaskPriority
     .optional(), // default MEDIUM (diatur di Prisma)
 
-  dueDate: z
-    .string()
+  dueDate: z.iso
     .datetime({ message: "Invalid date format, use ISO 8601" })
     .optional(), // boleh kosong
 });
@@ -46,8 +45,7 @@ export const updateTaskSchema = z.object({
   priority: TaskPriority
     .optional(),
 
-  dueDate: z
-    .string()
+  dueDate: z.iso
     .datetime({ message: "Invalid date format, use ISO 8601" })
     .optional(),
 });
