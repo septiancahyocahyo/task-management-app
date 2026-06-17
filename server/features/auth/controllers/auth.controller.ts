@@ -2,9 +2,10 @@ import { ZodError } from "zod";
 
 import { registerSchema } from "../schemas/register.schema";
 import { loginSchema } from "../schemas/login.schema";
-import { registerUser, loginUser } from "../services/auth.service";
+import { registerUser, loginUser, getMe } from "../services/auth.service";
 import { AppError } from "@/lib/api-error";
 import { successResponse, errorResponse } from "@/lib/api-response";
+import { authenticateRequest } from "@/lib/auth-middleware";
 
 // ─── REGISTER ────────────────────────────────────────────────
 export async function registerController(req: Request) {
@@ -72,6 +73,34 @@ export async function loginController(req: Request) {
     }
 
     // Fallback: error yang tidak terduga
+    return errorResponse("Something went wrong", 500);
+  }
+}
+
+// ─── GET CURRENT USER ─────────────────────────────────────────
+export async function getMeController(req: Request) {
+  try {
+    // 1. Jalankan middleware — cek dan verifikasi JWT token
+    const auth = await authenticateRequest(req);
+
+    // 2. Jika token tidak ada / tidak valid → langsung return 401
+    //    (tidak perlu throw, middleware sudah siapkan response-nya)
+    if (!auth.success) return auth.response;
+
+    // 3. Token valid! Ambil id user dari payload JWT
+    const { id } = auth.user;
+
+    // 4. Ambil data terbaru user dari database menggunakan id
+    //    (bukan dari token, karena data di DB bisa berubah)
+    const user = await getMe(id);
+
+    // 5. Return data user
+    return successResponse(user, "User fetched successfully", 200);
+  } catch (error) {
+    if (error instanceof AppError) {
+      return errorResponse(error.message, error.statusCode, error.errors);
+    }
+
     return errorResponse("Something went wrong", 500);
   }
 }
