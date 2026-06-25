@@ -62,7 +62,7 @@ Mendefinisikan arsitektur, teknologi, aturan desain, dan status proyek terkini.
 ### Current WIP / Next Steps
 - **Golang Backend Migration (Learning Stage)**:
   - [x] Milestone 1: Initialize project in `server-go/`, setup Fiber server & `/api/health`.
-  - [ ] Milestone 2: Setup GORM & connect to PostgreSQL database.
+  - [x] Milestone 2: Setup GORM & connect to PostgreSQL database.
   - [ ] Milestone 3: Implement Auth endpoints (`/register`, `/login`, `/me`) and JWT Middleware.
   - [ ] Milestone 4: Implement Task CRUD endpoints.
   - [ ] Milestone 5: Switch frontend proxy and perform E2E integration test.
