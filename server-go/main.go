@@ -3,10 +3,15 @@ package main
 import (
 	"log"
 
+	"server-go/config"
+
 	"github.com/gofiber/fiber/v2"
 )
 
 func main() {
+	// Koneksikan database PostgreSQL
+	config.ConnectDB()
+
 	// 1. Inisialisasi aplikasi Fiber (mirip const app = express() di Node.js)
 	app := fiber.New()
 
