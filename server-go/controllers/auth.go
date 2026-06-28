@@ -1,12 +1,14 @@
 package controllers
 
 import (
+	"errors"
 	"server-go/config"
 	"server-go/models"
 	"server-go/utils"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/google/uuid"
+	"gorm.io/gorm"
 )
 
 // RegisterInput mendefinisikan struktur data JSON yang dikirim oleh client
@@ -46,8 +48,9 @@ func RegisterUser(c *fiber.Ctx) error {
 	var existingUser models.User
 	// SELECT * FROM "User" WHERE email = ? LIMIT 1
 	result := config.DB.Where("email = ?", input.Email).First(&existingUser)
+
+	// Kondisi 1: Query berhasil tanpa error → email DITEMUKAN di database
 	if result.Error == nil {
-		// Jika tidak ada error saat query, berarti user dengan email tersebut ADA
 		return c.Status(409).JSON(fiber.Map{
 			"status":  "error",
 			"message": "Email sudah terdaftar",
@@ -56,6 +59,16 @@ func RegisterUser(c *fiber.Ctx) error {
 			},
 		})
 	}
+
+	// Kondisi 2: Error BUKAN "record not found" → ada masalah DB (koneksi putus, timeout, dll.)
+	if !errors.Is(result.Error, gorm.ErrRecordNotFound) {
+		return c.Status(500).JSON(fiber.Map{
+			"status":  "error",
+			"message": "Gagal memeriksa email di database",
+		})
+	}
+
+	// Kondisi 3: Error adalah "record not found" → email BELUM terdaftar, lanjut proses register
 
 	// 4. Hash password user
 	hashedPassword, err := utils.HashPassword(input.Password)
