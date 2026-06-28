@@ -44,7 +44,7 @@ Mendefinisikan arsitektur, teknologi, aturan desain, dan status proyek terkini.
 - **Mandatory Updates**: Selalu update bagian "Project Progress & Status" di file ini setelah menyelesaikan milestone/commit.
 
 ## 5. Project Progress & Status
-**Last Update:** 24 Juni 2026 (Dashboard Feature)
+**Last Update:** 26 Juni 2026 (Golang Migration - Register Endpoint)
 
 ### Completed Milestones
 - **Backend Core**: Setup skema Prisma, koneksi PostgreSQL, logika autentikasi JWT.
@@ -63,7 +63,7 @@ Mendefinisikan arsitektur, teknologi, aturan desain, dan status proyek terkini.
 - **Golang Backend Migration (Learning Stage)**:
   - [x] Milestone 1: Initialize project in `server-go/`, setup Fiber server & `/api/health`.
   - [x] Milestone 2: Setup GORM & connect to PostgreSQL database.
-  - [ ] Milestone 3: Implement Auth endpoints (`/register`, `/login`, `/me`) and JWT Middleware.
+  - [/] Milestone 3: Implement Auth endpoints (Implemented `/register`, WIP: `/login`, `/me`) and JWT Middleware.
   - [ ] Milestone 4: Implement Task CRUD endpoints.
   - [ ] Milestone 5: Switch frontend proxy and perform E2E integration test.
 
